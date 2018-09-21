@@ -89,6 +89,14 @@ class CIOApplicationEngine(environment: ApplicationEngineEnvironment, configure:
     }
 
     override fun stop(gracePeriod: Long, timeout: Long, timeUnit: TimeUnit) {
+        try {
+            shutdownServer(gracePeriod, timeout, timeUnit)
+        } finally {
+            engineDispatcher.close()
+        }
+    }
+
+    private fun shutdownServer(gracePeriod: Long, timeout: Long, timeUnit: TimeUnit) {
         stopRequest.complete(Unit)
 
         runBlocking {

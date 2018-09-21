@@ -157,7 +157,7 @@ class DefaultWebSocketSessionImpl(
 
         newPinger?.offer(EmptyPong) // it is safe here to send dummy pong because pinger will ignore it
 
-        if (closed.get()) {
+        if (closed.get() && newPinger != null) {
             runOrCancelPinger()
         }
     }

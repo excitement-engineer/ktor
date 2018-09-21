@@ -177,6 +177,7 @@ fun CoroutineScope.startConnectionPipeline(input: ByteReadChannel,
 
                 if (upgraded != null) {
                     if (upgraded.await()) { // suspend pipeline until we know if upgrade performed?
+                        outputsActor.close()
                         input.copyAndClose(requestBody as ByteChannel)
                         break
                     } else if (!expectedHttpBody && requestBody is ByteChannel) { // not upgraded, for example 404

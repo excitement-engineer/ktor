@@ -78,8 +78,9 @@ class ActorSelectorManager(dispatcher: CoroutineContext) : SelectorManagerSuppor
         }
     }
 
-    private fun select(selector: Selector): Int {
+    private suspend fun select(selector: Selector): Int {
         inSelect = true
+        dispatchIfNeeded()
         return if (wakeup.get() == 0L) {
             val count = selector.select(500L)
             inSelect = false
@@ -88,6 +89,18 @@ class ActorSelectorManager(dispatcher: CoroutineContext) : SelectorManagerSuppor
             inSelect = false
             wakeup.set(0)
             selector.selectNow()
+        }
+    }
+
+    private suspend fun dispatchIfNeeded() {
+        val dispatcher = coroutineContext.fold<CoroutineDispatcher?>(null) { acc, e ->
+            acc ?: (e as? CoroutineDispatcher)
+        }
+
+        if (dispatcher != null) {
+            if (dispatcher.isDispatchNeeded(coroutineContext)) {
+                yield()
+            }
         }
     }
 

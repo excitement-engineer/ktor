@@ -2,11 +2,12 @@ description = "Ktor http client"
 
 kotlin {
     sourceSets {
-        commonMain {
-            dependencies {
-                api project(":ktor-http")
-                api project(":ktor-utils")
-            }
+        commonMain.dependencies {
+            api project(":ktor-http")
+            api project(":ktor-utils")
+        }
+        jvmMain.dependencies {
+            api project(":ktor-network")
         }
     }
 }

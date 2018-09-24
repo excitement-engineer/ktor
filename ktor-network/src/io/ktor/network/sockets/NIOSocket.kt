@@ -81,6 +81,8 @@ internal abstract class NIOSocketImpl<out S>(
             throw e
         }
 
+        channel.attachJob(j)
+
         j.invokeOnCompletion {
             checkChannels()
         }

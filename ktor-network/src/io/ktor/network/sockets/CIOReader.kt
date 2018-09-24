@@ -19,8 +19,6 @@ internal fun CoroutineScope.attachForReadingImpl(
 ): WriterJob {
     val buffer = pool.borrow()
     return writer(EmptyCoroutineContext, channel) {
-        channel.attachJob(coroutineContext[Job]!!)
-
         try {
             while (true) {
                 val rc = nioChannel.read(buffer)
